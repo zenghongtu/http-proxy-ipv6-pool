@@ -100,17 +100,11 @@ impl Proxy {
 
 fn get_rand_ipv6_socket_addr(ipv6: u128, prefix_len: u8) -> SocketAddr {
     let mut rng = rand::thread_rng();
-    let ipv6_addr = IpAddr::V6(Ipv6Addr::new(
-        0x2605, 0x6400, 0x0040, 0xfc7e, 0x35bb, 0x7118, 0xc7e4, 0x62a6,
-    ));
-
-    SocketAddr::new(ipv6_addr, rng.gen::<u16>())
+    SocketAddr::new(get_rand_ipv6(ipv6, prefix_len), rng.gen::<u16>())
 }
 
 fn get_rand_ipv6(mut ipv6: u128, prefix_len: u8) -> IpAddr {
-    let rand: u128 = rand::thread_rng().gen();
-    let net_part = (ipv6 >> (128 - prefix_len)) << (128 - prefix_len);
-    let host_part = (rand << prefix_len) >> prefix_len;
-    ipv6 = net_part | host_part;
-    IpAddr::V6(ipv6.into())
+      // 使用固定的 IPv6 地址
+      let ipv6_addr = Ipv6Addr::new(0x2605, 0x6400, 0x0040, 0xfc7e, 0x35bb, 0x7118, 0xc7e4, 0x62a6);
+      IpAddr::V6(ipv6_addr)
 }
